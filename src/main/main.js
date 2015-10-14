@@ -1,6 +1,6 @@
-var express = require('express');
-var config = require('./config');
-var app = express();
+const express = require('express');
+const config = require('./config');
+const app = express();
 
 app.get('/ifttt/v1/status', getStatus);
 
@@ -8,7 +8,7 @@ function getStatus(req, res){
     res.status(200).end();
 }
 
-var server = app.listen(config.port, function () {
+var server = app.listen(config.port, () => {
     console.log('Now listening to http://%s:%s,', server.address().address, server.address().port);
 });
 
