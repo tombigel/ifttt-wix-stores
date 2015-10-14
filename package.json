@@ -1,0 +1,30 @@
+{
+  "name": "ifttt-wix-stores",
+  "version": "0.0.1",
+  "description": "IFTTT integration to Wix Stores",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "eslint src && jasmine src/test",
+    "start": "node src/main/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ganimomer/ifttt-wix-stores.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ganimomer/ifttt-wix-stores/issues"
+  },
+  "homepage": "https://github.com/ganimomer/ifttt-wix-stores#readme",
+  "devDependencies": {
+    "eslint": "^1.6.0",
+    "jasmine": "^2.3.2"
+  },
+  "engines": {
+    "node": "4.1.1"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
