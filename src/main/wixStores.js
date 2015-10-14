@@ -13,7 +13,7 @@ function getNewProducts(instance) {
         return {
           product_id: product.id,
           product_name: product.name,
-          product_image: product.media[0].url ? STATIC_MEDIA_URL + product.media[0].url : undefined
+          product_image: _.get(product, 'media[0].url') ? STATIC_MEDIA_URL + product.media[0].url : undefined
         };
       });
       DAL.setProducts(instance, products);
