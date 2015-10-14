@@ -28,7 +28,7 @@ function handleNewProductPolling(req, res) {
 app.get('/',                                                    (req, res) => res.status(200).send('OK'));
 app.get(`${BASE_URL}/status`,                      verifyIfttt, (req, res) => res.status(200).end());
 app.post(`${BASE_URL}/triggers/new_product_added`, verifyIfttt, handleNewProductPolling);
-app.post(`${BASE_URL}/ifttt/v1/test/setup`,        verifyIfttt, postTestSetup);
+app.post(`${BASE_URL}/test/setup`,        verifyIfttt, postTestSetup);
 
 app.listen(config.port);
 
