@@ -16,7 +16,17 @@ function verifyIfttt(req, res, next) {
 }
 
 function postTestSetup(req, res) {
-    res.status(200).json({data: {samples: {}}});
+    res.status(200).json({
+      data: {
+        samples: {
+          triggers: {
+            new_product_added: {
+              store_id: '1'
+            }
+          }
+        }
+      }
+    });
 }
 
 function handleNewProductPolling(req, res) {
@@ -28,7 +38,7 @@ function handleNewProductPolling(req, res) {
 app.get('/',                                                    (req, res) => res.status(200).send('OK'));
 app.get(`${BASE_URL}/status`,                      verifyIfttt, (req, res) => res.status(200).end());
 app.post(`${BASE_URL}/triggers/new_product_added`, verifyIfttt, handleNewProductPolling);
-app.post(`${BASE_URL}/test/setup`,        verifyIfttt, postTestSetup);
+app.post(`${BASE_URL}/test/setup`,                 verifyIfttt, postTestSetup);
 
 app.listen(config.port);
 
