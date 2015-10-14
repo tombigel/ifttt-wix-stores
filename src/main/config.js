@@ -1,4 +1,5 @@
 module.exports = {
     port: process.env.PORT || 5000,
-    storeInstance: process.env.storeInstance
+    storeInstance: process.env.storeInstance,
+    channelKey: process.env.channelKey
 };

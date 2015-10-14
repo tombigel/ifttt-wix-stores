@@ -4,7 +4,7 @@ const app = express();
 
 function verifyIfttt(req, res, next) {
     var channelKey = req.get('IFTTT-Channel-Key');
-    if (channelKey && channelKey === process.env.channelKey) {
+    if (channelKey && channelKey === config.channelKey) {
         next();
     } else {
         res.status(401).send('Unknown Source');
@@ -19,6 +19,8 @@ app.get('/', (req, res) => res.status(200).send('OK'));
 app.get('/ifttt/v1/status', verifyIfttt, (req, res) => res.status(200));
 app.post('/ifttt/v1/test/setup', verifyIfttt, postTestSetup);
 
-var server = app.listen(config.port, () => {
-    console.log('Now listening to http://%s:%s,', server.address().address, server.address().port);
-});
+app.listen(config.port);
+
+//var server = app.listen(config.port, () => {
+//    console.log('Now listening to http://%s:%s,', server.address().address, server.address().port);
+//});
