@@ -27,7 +27,3 @@ app.post(`${BASE_URL}/triggers/new_product_added`, verifyIfttt, handleNewProduct
 app.post(`${BASE_URL}/test/setup`,                 verifyIfttt, (req, res) => res.status(200).json(testData));
 
 app.listen(config.port);
-
-//var server = app.listen(config.port, () => {
-//    console.log('Now listening to http://%s:%s,', server.address().address, server.address().port);
-//});
