@@ -16,17 +16,17 @@ function requestByInstance(url, instance) {
       if (err) {
         reject(err);
       } else {
-        resolve(body)
+        resolve(body);
       }
     });
-  })
+  });
 }
 
 module.exports = {
-  getCurrentProducts(instance) {
+  pollProducts(instance) {
     return requestByInstance(`${PREFIX}/get-category-items?categoryId=${ALL_PRODUCTS_CATEGORY}`, instance)
       .then(JSON.parse)
     .then(data => productsPerStore.set(instance, data.products.map(p => p.id)));
   },
-  getPastProducts: instance => productsPerStore.get(instance)
+  getProducts: instance => productsPerStore.get(instance)
 };

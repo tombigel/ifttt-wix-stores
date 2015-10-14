@@ -4,7 +4,7 @@
   "description": "IFTTT integration to Wix Stores",
   "main": "Gruntfile.js",
   "scripts": {
-    "test": "eslint src && jasmine src/test",
+    "test": "eslint src && jasmine",
     "start": "node src/main/main.js"
   },
   "repository": {
