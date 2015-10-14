@@ -1,23 +1,26 @@
 'use strict';
-const PREFIX = 'http://ecom.wix.com/_api/wix-ecommerce-renderer-web/store-front';
-const ALL_PRODUCTS_CATEGORY = '00000000-000000-000000-000000000001';
-const util = require('./util');
 
-function requestByInstance(url, instance) {
-  return util.requestPromise({
-    url,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'X-ecom-instance': instance
-    }
-  });
-}
+const DAL = require('./DAL');
+const STATIC_MEDIA_URL = 'http://static.wixstatic.com/media/';
+const _ = require('lodash');
+const wixStores = require('./wixStoresFacade');
 
-function pollProducts(instance) {
-  return requestByInstance(`${PREFIX}/get-category-items?categoryId=${ALL_PRODUCTS_CATEGORY}`, instance)
-    .then(JSON.parse);
+function getNewProducts(instance) {
+  let pastProducts = DAL.getProducts(instance);
+  return wixStores.pollProducts(instance)
+    .then(function (data) {
+      let products = data.products.map(function (product) {
+        return {
+          product_id: product.id,
+          product_name: product.name,
+          product_image: product.media[0].url ? STATIC_MEDIA_URL + product.media[0].url : undefined
+        };
+      });
+      DAL.setProducts(instance, products);
+      return pastProducts ? _.reject(products, product => _.some(pastProducts, 'id', product.id)) : [];
+    });
 }
 
 module.exports = {
-  pollProducts
+  getNewProducts
 };

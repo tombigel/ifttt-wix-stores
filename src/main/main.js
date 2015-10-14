@@ -1,6 +1,10 @@
+'use strict';
+
 const express = require('express');
 const config = require('./config');
+const wixStores = require('./wixStores');
 const app = express();
+const BASE_URL = '/ifttt/v1';
 
 function verifyIfttt(req, res, next) {
     var channelKey = req.get('IFTTT-Channel-Key');
@@ -15,9 +19,16 @@ function postTestSetup(req, res) {
     res.status(200).json({data: {samples: {}}});
 }
 
-app.get('/', (req, res) => res.status(200).send('OK'));
-app.get('/ifttt/v1/status', verifyIfttt, (req, res) => res.status(200).end());
-app.post('/ifttt/v1/test/setup', verifyIfttt, postTestSetup);
+function handleNewProductPolling(req, res) {
+  wixStores.getNewProducts(req.body.triggerFields.store_id)
+  .then((newProducts) => res.status(200).json({data: newProducts}));
+
+}
+
+app.get('/',                                                    (req, res) => res.status(200).send('OK'));
+app.get(`${BASE_URL}/status`,                      verifyIfttt, (req, res) => res.status(200).end());
+app.post(`${BASE_URL}/triggers/new_product_added`, verifyIfttt, handleNewProductPolling);
+app.post(`${BASE_URL}/ifttt/v1/test/setup`,        verifyIfttt, postTestSetup);
 
 app.listen(config.port);
 

@@ -2,13 +2,13 @@
 
 describe('new Products', function () {
   const DAL = require('../main/DAL');
-  const wixStores = require('../main/wixStores');
+  const wixStores = require('../main/wixStoresFacade');
   beforeEach(()=> {
-    spyOn(wixStores, 'pollProducts').and.callFake(()=> Promise.resolve([1, 2, 3]));
-    spyOn(DAL, 'getProducts').and.callFake(()=> [1,2]);
+    spyOn(wixStores, 'pollProducts').and.callFake(()=> Promise.resolve([{id: 1}, {id: 2}, {id: 3}]));
+    spyOn(DAL, 'getProducts').and.callFake(()=> [{product_id: 1}, {product_id: 2}]);
   });
   it('should return a promise for the difference', (done) => {
-    let wixStoresApi = require('../main/wixStoresApi');
+    let wixStoresApi = require('../main/wixStores');
     wixStoresApi.getNewProducts('')
       .then(function (res) {
         expect(res).toEqual([3]);
