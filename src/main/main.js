@@ -16,7 +16,7 @@ function postTestSetup(req, res) {
 }
 
 app.get('/', (req, res) => res.status(200).send('OK'));
-app.get('/ifttt/v1/status', verifyIfttt, (req, res) => res.status(200));
+app.get('/ifttt/v1/status', verifyIfttt, (req, res) => res.status(200).end());
 app.post('/ifttt/v1/test/setup', verifyIfttt, postTestSetup);
 
 app.listen(config.port);
