@@ -1,9 +1,10 @@
 'use strict';
 
 describe('new Products', function () {
-  let DAL = require('../main/DAL');
+  const DAL = require('../main/DAL');
+  const wixStores = require('../main/wixStores');
   beforeEach(()=> {
-    spyOn(DAL, 'pollProducts').and.callFake(()=> Promise.resolve([1, 2, 3]));
+    spyOn(wixStores, 'pollProducts').and.callFake(()=> Promise.resolve([1, 2, 3]));
     spyOn(DAL, 'getProducts').and.callFake(()=> [1,2]);
   });
   it('should return a promise for the difference', (done) => {
