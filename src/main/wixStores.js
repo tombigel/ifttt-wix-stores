@@ -7,8 +7,8 @@ const _ = require('lodash');
 const wixStores = require('./wixStoresFacade');
 
 function getNewProducts(instance) {
-  const dalPromise = DAL.getProducts(instance).catch(()=> Error('Firebase Error'));
-  const wixStoresPromise = wixStores.pollProducts(instance).catch(()=> Error('Stores API Error'));
+  const dalPromise = DAL.getProducts(instance);
+  const wixStoresPromise = wixStores.pollProducts(instance);
   return Promise.all([dalPromise, wixStoresPromise])
     .then(function (data) {
       const pastProducts = data[0];
@@ -23,7 +23,7 @@ function getNewProducts(instance) {
       });
       DAL.setProducts(instance, products);
       return pastProducts ? _.reject(products, product => _.some(pastProducts, 'id', product.id)) : [];
-    });
+    }).catch((err) => console.log(err));
 }
 
 module.exports = {
