@@ -47,9 +47,8 @@ function getProducts(instanceId) {
           console.log(currProducts);
           const newProducts = getNewProducts(productsData, currProducts);
           console.log('/////////////////////////////////////////////////////');
-          console.log(newProducts);
           const allProducts = currProducts.concat(newProducts);
-          DAL.setProducts(allProducts);
+          DAL.setProducts(storeMetaData.storeId, allProducts);
           return getProductsSince(allProducts, storeMetaData.timestamp);
         });
     });
