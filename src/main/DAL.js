@@ -6,9 +6,9 @@ let instances;
 function promiseValues(instance) {
   return new Promise(function (resolve) {
     console.log(instances);
-    instances.once(instance, function (data) {
+    instances.child(instance).once('value', function (data) {
       console.log(`requested data for instance ${instance} with data ${JSON.parse(data)}`);
-      resolve(data);
+      resolve(data.val());
     });
   });
 }
