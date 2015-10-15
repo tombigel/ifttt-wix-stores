@@ -11,7 +11,10 @@ function getNewProducts(instance) {
   const wixStoresPromise = wixStores.pollProducts(instance).catch(()=> Error('Stores API Error'));
   return Promise.all([dalPromise, wixStoresPromise])
     .then(function (data) {
+      console.log('reached then');
       const pastProducts = data[0];
+      console.log(`pastProducts full? ${Boolean(pastProducts)}`);
+      console.log(`wixStores data ? ${data[1] && data[1].products}`);
       const products = data[1].products.map(function (product) {
         return {
           product_id: product.id,
