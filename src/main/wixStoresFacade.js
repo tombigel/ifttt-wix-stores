@@ -15,9 +15,16 @@ function requestByInstance(url, instance) {
 
 function pollProducts(instance) {
   return requestByInstance(`${PREFIX}/get-category-items?categoryId=${ALL_PRODUCTS_CATEGORY}`, instance)
-    .then(JSON.parse);
+      .then(JSON.parse);
+}
+
+function pollOrders(instance) {
+  return requestByInstance(`${PREFIX}/orders`, instance)
+      .then(JSON.parse)
+      .then(data => data.payload.orders);
 }
 
 module.exports = {
-  pollProducts
+  pollProducts,
+  pollOrders
 };

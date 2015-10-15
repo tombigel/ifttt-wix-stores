@@ -1,16 +1,25 @@
 'use strict';
 
 const DAL = require('./DAL');
-DAL.init(require('./config').firebaseApp);
 const STATIC_MEDIA_URL = 'http://static.wixstatic.com/media/';
 const _ = require('lodash');
 const wixStores = require('./wixStoresFacade');
+
+DAL.init(require('./config').firebaseApp);
 
 function getProductInfo(product) {
   return {
     meta: {id: product.id, timestamp: Date.now()},
     product_name: product.name,
     product_image: _.get(product, 'media[0].url') ? STATIC_MEDIA_URL + product.media[0].url : undefined
+  };
+}
+
+function getOrderInfo(order) {
+  return {
+    meta: {id: order.id, timestamp: order.createdDate},
+    buyer_name: order.userInfo.name,
+    total: `${order.totals.total} ${order.currency}`
   };
 }
 
@@ -21,8 +30,8 @@ function getNewProducts(productsData, currProducts) {
   return newProductData.map(getProductInfo);
 }
 
-function getProductsSince(products, since) {
-  return products.filter(product => product.meta.timestamp > since);
+function getItemsSince(items, since) {
+  return items.filter(item => item.meta.timestamp > since);
 }
 
 function getProducts(instanceId) {
@@ -42,11 +51,28 @@ function getProducts(instanceId) {
           const newProducts = getNewProducts(productsData, currProducts);
           const allProducts = currProducts.concat(newProducts);
           DAL.setProducts(storeMetaData.storeId, allProducts);
-          return getProductsSince(allProducts, storeMetaData.timestamp);
+          return getItemsSince(allProducts, storeMetaData.timestamp);
         });
     });
 }
 
+function getOrders(instanceId){
+  return Promise.all([DAL.getStoreMetaData(instanceId), wixStores.pollOrders(instanceId)])
+  .then(function(data) {
+        const storeMetaData = data[0];
+
+        if (_.isUndefined(storeMetaData)) {
+          const storeId = DAL.getNextStoreId();
+          DAL.setStore(storeId, instanceId);
+          return [];
+        }
+        const orders = data[1].map(getOrderInfo);
+        return getItemsSince(orders, storeMetaData.timestamp);
+      });
+
+}
+
 module.exports = {
-  getProducts
+  getProducts,
+  getOrders
 };
