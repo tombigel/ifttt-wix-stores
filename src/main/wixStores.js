@@ -15,11 +15,15 @@ function getProductInfo(product) {
 }
 
 function getNewProducts(productsData, currProducts) {
-  return _(productsData)
-    .reject(function(product) {
-      return _.some(currProducts, (currProduct) => currProduct.meta.id === product.id);
-    }).map(getProductInfo)
-    .value();
+  const newProductData = _.reject(productsData, function(product) {
+    return _.some(currProducts, (currProd) => currProd.meta.id === product.id);
+  });
+  console.log('raw new product data');
+  console.log(newProductData);
+  const formattedData = newProductData.map(getProductInfo);
+  console.log('formatted data');
+  console.log(formattedData);
+  return formattedData;
 }
 
 function getProductsSince(products, since) {
