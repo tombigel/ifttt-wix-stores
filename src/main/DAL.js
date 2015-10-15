@@ -11,26 +11,29 @@ function init(firebaseApp) {
 }
 
 function getStoreId(instanceId) {
-  return new Promise(function(resolve) {
-    ref.child('stores').once('value', function(data) {
+  return new Promise(function (resolve) {
+    ref.child('stores').once('value', function (data) {
       resolve(_.findKey(data.val(), (store) => store === instanceId));
     });
   });
 }
 
-function getProducts(instanceId) {
-  getStoreId(instanceId)
-  .then(function(storeId) {
-      return new Promise(function(resolve) {
-        instances.child(storeId).once('value', function(data) {
-          resolve(data.val());
-        });
-      });
+function getProducts(storeId) {
+  return new Promise(function (resolve) {
+    instances.child(storeId).once('value', function (data) {
+      resolve(data.val());
     });
+  });
+}
+
+function setStore(instanceId) {
+  ref.child('stores').push(instanceId);
 }
 
 module.exports = {
   init,
+  getStoreId,
+  setStore,
   getProducts,
   setProducts: (instance, value) => instances.child(instance).set(value)
 };

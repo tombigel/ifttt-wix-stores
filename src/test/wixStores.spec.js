@@ -5,6 +5,7 @@ describe('new Products', function () {
   const wixStores = require('../main/wixStoresFacade');
   beforeEach(()=> {
     spyOn(wixStores, 'pollProducts').and.callFake(()=> Promise.resolve([{id: 1}, {id: 2}, {id: 3}]));
+    spyOn(DAL, 'getStoreId').and.callFake(()=>Promise.resolve(1));
     spyOn(DAL, 'getProducts').and.callFake(()=> Promise.resolve([{product_id: 1}, {product_id: 2}]));
     spyOn(DAL, 'init');
   });
