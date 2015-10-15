@@ -23,10 +23,7 @@ function handleNewProductPolling(req, res) {
   var instanceId = _.get(req, 'body.triggerFields.instance_id');
   if (instanceId) {
     wixStores.getProducts(instanceId)
-      .then(
-      (newProducts) => res.status(200).json({data: newProducts}),
-      (err) => res.status(500).json(err)
-    );
+      .then((newProducts) => res.status(200).json({data: newProducts}), (err) => res.status(500).json(err));
   } else {
     res.status(400).json({errors: ['missing store_id']});
   }
