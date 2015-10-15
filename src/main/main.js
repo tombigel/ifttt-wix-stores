@@ -15,23 +15,27 @@ function verifyIfttt(req, res, next) {
   if (channelKey && channelKey === config.channelKey) {
     next();
   } else {
-    res.status(401).send('Unknown Source');
+    res.status(401).send({errors: [{message: 'Unknown Source'}]});
   }
 }
 
 function handleNewProductPolling(req, res) {
-  var instanceId = _.get(req, 'body.triggerFields.instance_id');
+  const instanceId = _.get(req, 'body.triggerFields.instance_id');
+  const limit = _.get(req, 'body.limit');
   if (instanceId) {
     wixStores.getProducts(instanceId)
-      .then((newProducts) => res.status(200).json({data: newProducts}), (err) => res.status(500).json(err));
+      .then(function(newProducts) {
+        res.status(200).json({data: _.isUndefined(limit) ? newProducts : _.takeRight(newProducts, limit)});
+      }, (err) => res.status(500).json(err));
   } else {
-    res.status(400).json({errors: ['missing store_id']});
+    res.status(400).json({errors: [{message:'missing store_id'}]});
   }
 }
 
 app.get('/', (req, res) => res.status(200).json(config.HEROKU_RELEASE_VERSION));
 app.get(`${BASE_URL}/status`, verifyIfttt, (req, res) => res.status(200).end());
 app.post(`${BASE_URL}/triggers/new_product_added`, verifyIfttt, handleNewProductPolling);
+
 app.post(`${BASE_URL}/test/setup`, verifyIfttt, (req, res) => res.status(200).json(testData));
 
 app.listen(config.port);
