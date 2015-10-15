@@ -23,7 +23,7 @@ function getNewProducts(instance) {
       });
       DAL.setProducts(instance, products);
       return pastProducts ? _.reject(products, product => _.some(pastProducts, 'id', product.id)) : [];
-    }).catch((err) => console.log(err));
+    }, (err) => console.log(err));
 }
 
 module.exports = {
