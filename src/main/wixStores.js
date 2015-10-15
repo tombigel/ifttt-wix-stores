@@ -28,20 +28,22 @@ function getProductsSince(products, since) {
 function getProducts(instanceId) {
   return Promise.all([DAL.getStoreMetaData(instanceId), wixStores.pollProducts(instanceId)])
     .then(function (data) {
+      const storeMetaData = data[0];
       const productsData = data[1].products;
-      if (_.isUndefined(data[0])) {
+
+      if (_.isUndefined(storeMetaData)) {
         const storeId = DAL.getNextStoreId();
         DAL.setProducts(storeId, productsData.map(getProductInfo));
         DAL.setStore(storeId, instanceId);
         return [];
       }
-      DAL.getProducts(data[0].storeId)
+      DAL.getProducts(storeMetaData.storeId)
         .then(function (currProducts) {
           const allProducts = currProducts.concat(getNewProducts(productsData, currProducts));
           DAL.setProducts(allProducts);
-          return getProductsSince(allProducts, data[0].timestamp);
+          return getProductsSince(allProducts, storeMetaData.timestamp);
         });
-    }, err => console.log(err));
+    });
 }
 
 module.exports = {
