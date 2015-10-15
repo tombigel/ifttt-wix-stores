@@ -19,6 +19,7 @@ function getOrderInfo(order) {
   return {
     meta: {id: order.id, timestamp: order.createdDate},
     buyer_name: order.userInfo.name,
+    created_date: order.createdDate,
     total: `${order.totals.total} ${order.currency}`
   };
 }
