@@ -40,7 +40,11 @@ function getProducts(instanceId) {
       }
       return DAL.getProducts(storeMetaData.storeId)
         .then(function (currProducts) {
-          const allProducts = currProducts.concat(getNewProducts(productsData, currProducts));
+          console.log(currProducts);
+          const newProducts = getNewProducts(productsData, currProducts);
+          console.log('/////////////////////////////////////////////////////');
+          console.log(newProducts);
+          const allProducts = currProducts.concat(newProducts);
           DAL.setProducts(allProducts);
           return getProductsSince(allProducts, storeMetaData.timestamp);
         });
