@@ -11,7 +11,11 @@ function promiseValues(instance) {
 
 function init(firebaseApp) {
   ref = new FireBase(`https://${firebaseApp}.firebaseio.com/`);
+  console.log('Firebase up and running!');
   instances = ref.child('instances');
+  if (!instances) {
+    console.log('However, no instances');
+  }
 }
 
 module.exports = {
