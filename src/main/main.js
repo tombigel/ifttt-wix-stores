@@ -8,6 +8,8 @@ const _ = require('lodash');
 const app = express();
 const BASE_URL = '/ifttt/v1';
 
+app.use(require('body-parser').json());
+
 function verifyIfttt(req, res, next) {
   var channelKey = req.get('IFTTT-Channel-Key');
   if (channelKey && channelKey === config.channelKey) {
