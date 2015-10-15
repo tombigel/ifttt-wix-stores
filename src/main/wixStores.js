@@ -19,7 +19,7 @@ function getOrderInfo(order) {
   return {
     meta: {id: order.id, timestamp: order.createdDate},
     buyer_name: order.userInfo.name,
-    created_date: new Date(order.createdDate).toISOString(),
+    created_date: new Date(+order.createdDate).toISOString(),
     total: `${order.totals.total} ${order.currency}`
   };
 }
