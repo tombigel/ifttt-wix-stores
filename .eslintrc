@@ -2,8 +2,7 @@ rules:
   indent:
     - 0
   quotes:
-    - 2
-    - single
+    - 0
   linebreak-style:
     - 2
     - unix
