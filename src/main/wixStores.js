@@ -32,7 +32,7 @@ function getNewProducts(instanceId) {
       }
       DAL.setStore(instanceId);
       return [];
-    });
+    }, (err) => console.log(err));
 }
 
 module.exports = {
