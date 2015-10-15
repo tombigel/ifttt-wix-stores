@@ -2,12 +2,12 @@
 const Firebase = require('firebase');
 const _ = require('lodash');
 let ref;
-let instances;
+let productsByStoreId;
 
 
 function init(firebaseApp) {
   ref = new Firebase(`https://${firebaseApp}.firebaseio.com/`);
-  instances = ref.child('instances');
+  productsByStoreId = ref.child('productsByStoreId');
 }
 
 function getStoreMetaData(instanceId) {
@@ -22,7 +22,7 @@ function getStoreMetaData(instanceId) {
 
 function getProducts(storeId) {
   return new Promise(function (resolve) {
-    instances.child(storeId).once('value', function (data) {
+    productsByStoreId.child(storeId).once('value', function (data) {
       resolve(data.val());
     });
   });
@@ -44,5 +44,5 @@ module.exports = {
   setStore,
   getProducts,
   getNextStoreId,
-  setProducts: (storeId, value) => instances.child(storeId).update(value)
+  setProducts: (storeId, value) => productsByStoreId.child(storeId).set(value)
 };
