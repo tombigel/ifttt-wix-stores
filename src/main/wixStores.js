@@ -15,15 +15,10 @@ function getProductInfo(product) {
 }
 
 function getNewProducts(productsData, currProducts) {
-  const newProductData = _.reject(productsData, function(product) {
+  const newProductData = _.reject(productsData, function (product) {
     return _.some(currProducts, (currProd) => currProd.meta.id === product.id);
   });
-  console.log('raw new product data');
-  console.log(newProductData);
-  const formattedData = newProductData.map(getProductInfo);
-  console.log('formatted data');
-  console.log(formattedData);
-  return formattedData;
+  return newProductData.map(getProductInfo);
 }
 
 function getProductsSince(products, since) {
@@ -44,9 +39,7 @@ function getProducts(instanceId) {
       }
       return DAL.getProducts(storeMetaData.storeId)
         .then(function (currProducts) {
-          console.log(currProducts);
           const newProducts = getNewProducts(productsData, currProducts);
-          console.log('/////////////////////////////////////////////////////');
           const allProducts = currProducts.concat(newProducts);
           DAL.setProducts(storeMetaData.storeId, allProducts);
           return getProductsSince(allProducts, storeMetaData.timestamp);
