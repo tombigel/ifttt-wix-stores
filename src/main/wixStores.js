@@ -38,7 +38,7 @@ function getProducts(instanceId) {
         DAL.setStore(storeId, instanceId);
         return [];
       }
-      DAL.getProducts(storeMetaData.storeId)
+      return DAL.getProducts(storeMetaData.storeId)
         .then(function (currProducts) {
           const allProducts = currProducts.concat(getNewProducts(productsData, currProducts));
           DAL.setProducts(allProducts);
