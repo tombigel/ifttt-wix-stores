@@ -1,24 +1,36 @@
 'use strict';
-const FireBase = require('firebase');
+const Firebase = require('firebase');
+const _ = require('lodash');
 let ref;
 let instances;
 
-function promiseValues(instanceId) {
-  return new Promise(function (resolve) {
-    instances.child(instanceId).once('value', function (data) {
-      console.log(`requested data for instance ${instanceId} with data ${JSON.parse(data.val())}`);
-      resolve(data.val());
+
+function init(firebaseApp) {
+  ref = new Firebase(`https://${firebaseApp}.firebaseio.com/`);
+  instances = ref.child('instances');
+}
+
+function getStoreId(instanceId) {
+  return new Promise(function(resolve) {
+    ref.child('stores').once('value', function(data) {
+      resolve(_.findKey(data.val(), (store) => store === instanceId));
     });
   });
 }
 
-function init(firebaseApp) {
-  ref = new FireBase(`https://${firebaseApp}.firebaseio.com/`);
-  instances = ref.child('instances');
+function getProducts(instanceId) {
+  getStoreId(instanceId)
+  .then(function(storeId) {
+      return new Promise(function(resolve) {
+        instances.child(storeId).once('value', function(data) {
+          resolve(data.val());
+        });
+      });
+    });
 }
 
 module.exports = {
   init,
-  getProducts: instance => promiseValues(instance),
+  getProducts,
   setProducts: (instance, value) => instances.child(instance).set(value)
 };
