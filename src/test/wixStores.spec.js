@@ -6,6 +6,7 @@ describe('new Products', function () {
   beforeEach(()=> {
     spyOn(wixStores, 'pollProducts').and.callFake(()=> Promise.resolve([{id: 1}, {id: 2}, {id: 3}]));
     spyOn(DAL, 'getProducts').and.callFake(()=> [{product_id: 1}, {product_id: 2}]);
+    spyOn(DAL, 'init');
   });
   it('should return a promise for the difference', (done) => {
     let wixStoresApi = require('../main/wixStores');

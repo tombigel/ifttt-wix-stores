@@ -1,15 +1,16 @@
 'use strict';
 
 const DAL = require('./DAL');
+DAL.init(require('./config').firebaseApp);
 const STATIC_MEDIA_URL = 'http://static.wixstatic.com/media/';
 const _ = require('lodash');
 const wixStores = require('./wixStoresFacade');
 
 function getNewProducts(instance) {
-  let pastProducts = DAL.getProducts(instance);
-  return wixStores.pollProducts(instance)
+  return Promise.all([DAL.getProducts(instance), wixStores.pollProducts(instance)])
     .then(function (data) {
-      let products = data.products.map(function (product) {
+      const pastProducts = data[0];
+      const products = data[1].products.map(function (product) {
         return {
           product_id: product.id,
           product_name: product.name,
