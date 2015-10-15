@@ -14,7 +14,7 @@ function getStoreMetaData(instanceId) {
   return new Promise(function (resolve) {
     ref.child('stores').once('value', function (data) {
       const stores = data.val();
-      const storeId = _.findKey(stores, {instanceId});
+      const storeId = _.findKey(stores, {instance_id: instanceId});
       resolve(storeId && {storeId, timestamp: stores[storeId].timestamp});
     });
   });
@@ -30,7 +30,7 @@ function getProducts(storeId) {
 
 function setStore(storeId, instanceId) {
   ref.child('stores').child(storeId).set({
-    instanceId: instanceId, timestamp: Date.now()
+    instance_id: instanceId, timestamp: Date.now()
   });
 }
 
