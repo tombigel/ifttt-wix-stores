@@ -3,10 +3,10 @@ const FireBase = require('firebase');
 let ref;
 let instances;
 
-function promiseValues(instance) {
+function promiseValues(instanceId) {
   return new Promise(function (resolve) {
-    instances.child(instance).once('value', function (data) {
-      console.log(`requested data for instance ${instance} with data ${JSON.parse(data)}`);
+    instances.child(instanceId).once('value', function (data) {
+      console.log(`requested data for instance ${instanceId} with data ${JSON.parse(data.val())}`);
       resolve(data.val());
     });
   });
