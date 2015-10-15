@@ -16,8 +16,9 @@ function getProductInfo(product) {
 
 function getNewProducts(productsData, currProducts) {
   return _(productsData)
-    .reject((product) => _.some(currProducts, {meta: {id: product.id}}))
-    .map(getProductInfo)
+    .reject(function(product) {
+      return _.some(currProducts, (currProduct) => currProduct.meta.id === product.id)
+    }).map(getProductInfo)
     .value();
 }
 
