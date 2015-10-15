@@ -5,7 +5,10 @@ let instances;
 
 function promiseValues(instance) {
   return new Promise(function (resolve) {
-    instances.once(instance, (data) => resolve(data));
+    instances.once(instance, function (data) {
+      console.log(`requested data for instance ${instance} with data ${JSON.parse(data)}`);
+      resolve(data)
+    });
   });
 }
 
