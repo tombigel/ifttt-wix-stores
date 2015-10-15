@@ -4,7 +4,7 @@ let ref;
 let instances;
 
 function promiseValues(instance) {
-  return new Promise(function(resolve){
+  return new Promise(function (resolve) {
     ref.once(instance, (data) => resolve(data));
   });
 }
