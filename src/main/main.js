@@ -22,7 +22,7 @@ function verifyIfttt(req, res, next) {
 function handleNewProductPolling(req, res) {
   var instanceId = _.get(req, 'body.triggerFields.instance_id');
   if (instanceId) {
-    wixStores.getNewProducts(instanceId)
+    wixStores.getProducts(instanceId)
       .then(
       (newProducts) => res.status(200).json({data: newProducts}),
       (err) => res.status(500).json(err)

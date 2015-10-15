@@ -8,33 +8,42 @@ const wixStores = require('./wixStoresFacade');
 
 function getProductInfo(product) {
   return {
-    id: product.id,
+    meta: {id: product.id, timestamp: Date.now()},
     product_name: product.name,
     product_image: _.get(product, 'media[0].url') ? STATIC_MEDIA_URL + product.media[0].url : undefined
   };
 }
 
-function getProductsWithNewIds(current, polled) {
-  return current ? _.reject(polled, product => _.some(current, {id: product.id})) : [];
+function getNewProducts(productsData, currProducts) {
+  return _(productsData)
+    .reject((product) => _.some(currProducts, {meta: {id: product.id}}))
+    .map(getProductInfo)
+    .value();
 }
 
-function getNewProducts(instanceId) {
-  return DAL.getStoreId(instanceId)
-    .then(function (storeId) {
-      if (storeId) {
-        return Promise.all([DAL.getProducts(storeId), wixStores.pollProducts(instanceId)])
-          .then(function (data) {
-            const products = data[1].products.map(getProductInfo);
-            DAL.setProducts(storeId, products);
-            return getProductsWithNewIds(data[0], products);
-          }, (err) => console.log(err));
+function getProductsSince(products, since) {
+  return products.filter(product => product.meta.timestamp > since);
+}
 
+function getProducts(instanceId) {
+  return Promise.all([DAL.getStoreMetaData(instanceId), wixStores.pollProducts(instanceId)])
+    .then(function (data) {
+      const productsData = data[1].products;
+      if (_.isUndefined(data[0])) {
+        const storeId = DAL.getNextStoreId();
+        DAL.setProducts(storeId, productsData.map(getProductInfo));
+        DAL.setStore(storeId, instanceId);
+        return [];
       }
-      DAL.setStore(instanceId);
-      return [];
-    }, (err) => console.log(err));
+      DAL.getProducts(data[0].storeId)
+        .then(function (currProducts) {
+          const allProducts = currProducts.concat(getNewProducts(productsData, currProducts));
+          DAL.setProducts(allProducts);
+          return getProductsSince(allProducts, data[0].timestamp);
+        });
+    }, err => console.log(err));
 }
 
 module.exports = {
-  getNewProducts
+  getProducts
 };

@@ -10,10 +10,12 @@ function init(firebaseApp) {
   instances = ref.child('instances');
 }
 
-function getStoreId(instanceId) {
+function getStoreMetaData(instanceId) {
   return new Promise(function (resolve) {
     ref.child('stores').once('value', function (data) {
-      resolve(_.findKey(data.val(), (store) => store === instanceId));
+      const stores = data.val();
+      const storeId = _.findKey(stores, {instanceId});
+      resolve(storeId && {storeId, timestamp: stores[storeId].timestamp});
     });
   });
 }
@@ -26,14 +28,21 @@ function getProducts(storeId) {
   });
 }
 
-function setStore(instanceId) {
-  ref.child('stores').push(instanceId);
+function setStore(storeId, instanceId) {
+  ref.child('stores').child(storeId).set({
+    instanceId: instanceId, timestamp: Date.now()
+  });
+}
+
+function getNextStoreId() {
+  return ref.child('stores').push().key();
 }
 
 module.exports = {
   init,
-  getStoreId,
+  getStoreMetaData,
   setStore,
   getProducts,
-  setProducts: (instance, value) => instances.child(instance).set(value)
+  getNextStoreId,
+  setProducts: (storeId, value) => instances.child(storeId).update(value)
 };
