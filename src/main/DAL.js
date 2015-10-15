@@ -10,8 +10,13 @@ function promiseValues(instance) {
 }
 
 function init(firebaseApp) {
-  ref = new FireBase(`https://${firebaseApp}/.firebaseio.com/`);
-  instances = ref.child('instances');
+  try {
+    ref = new FireBase(`https://${firebaseApp}/.firebaseio.com/`);
+    instances = ref.child('instances');
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
 module.exports = {
