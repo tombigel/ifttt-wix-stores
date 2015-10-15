@@ -20,11 +20,13 @@ function verifyIfttt(req, res, next) {
 }
 
 function handleNewProductPolling(req, res) {
-  var storeId = _.get(req, 'body.triggerFields.store_id');
-  if (storeId) {
-    wixStores.getNewProducts(req.body.triggerFields.store_id)
-      .then((newProducts) => res.status(200).json({data: newProducts}),
-      (err) => res.status(500).json(err));
+  var instanceId = _.get(req, 'body.triggerFields.instance_id');
+  if (instanceId) {
+    wixStores.getNewProducts(instanceId)
+      .then(
+      (newProducts) => res.status(200).json({data: newProducts}),
+      (err) => res.status(500).json(err)
+    );
   } else {
     res.status(400).json({errors: ['missing store_id']});
   }
