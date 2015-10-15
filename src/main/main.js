@@ -18,7 +18,8 @@ function verifyIfttt(req, res, next) {
 }
 
 function handleNewProductPolling(req, res) {
-  var storeId = _.get(req, 'body.triggerFields.store_id');
+  let reqBody = JSON.parse(req.body);
+  var storeId = _.get(reqBody, 'triggerFields.store_id');
   if (storeId) {
     wixStores.getNewProducts(req.body.triggerFields.store_id)
       .then((newProducts) => res.status(200).json({data: newProducts}));
