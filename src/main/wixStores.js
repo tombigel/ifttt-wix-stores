@@ -8,10 +8,14 @@ const wixStores = require('./wixStoresFacade');
 
 function getProductInfo(product) {
   return {
-    product_id: product.id,
+    id: product.id,
     product_name: product.name,
     product_image: _.get(product, 'media[0].url') ? STATIC_MEDIA_URL + product.media[0].url : undefined
   };
+}
+
+function getProductsWithNewIds(current, polled) {
+  return current ? _.reject(polled, product => _.some(current, {id: product.id})) : [];
 }
 
 function getNewProducts(instanceId) {
@@ -22,7 +26,7 @@ function getNewProducts(instanceId) {
           .then(function (data) {
             const products = data[1].products.map(getProductInfo);
             DAL.setProducts(storeId, products);
-            return data[0] ? _.reject(products, product => _.some(data[0], 'id', product.id)) : [];
+            return getProductsWithNewIds(data[0], products);
           }, (err) => console.log(err));
 
       }
